@@ -96,7 +96,7 @@ body{
             	}
             }
         };
-        $.post("onlineusers.do",function(data){
+        $.get("onlineusers.do",function(data){
     		for(var i=0;i<data.length;i++)
     			$("#users").append('<a href="#" onclick="talk(this)" class="list-group-item">'+data[i]+'</a>');
     	});

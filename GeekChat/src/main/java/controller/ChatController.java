@@ -38,7 +38,7 @@ public class ChatController {
 	@Autowired
 	UserDao userDao;
 	
-	@RequestMapping("onlineusers")
+	@RequestMapping(value="onlineusers",method = RequestMethod.GET)
 	@ResponseBody
 	public Set<String> onlineusers(HttpSession session){
 		Map<Long, WebSocketSession> map=MyWebSocketHandler.userSocketSessionMap;
