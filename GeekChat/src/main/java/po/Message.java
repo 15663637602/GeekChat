@@ -3,15 +3,10 @@ package po;
 import java.util.Date;
 public class Message {
 
-	//发送者
 	public Long from;
-	//发送者名称
 	public String fromName;
-	//接收者
 	public Long to;
-	//发送的文本
 	public String text;
-	//发送日期
 	public Date date;
 
 	public Long getFrom() {

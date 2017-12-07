@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import po.User;
@@ -24,7 +25,7 @@ public class LoginController {
 	@Autowired
 	UserDao userDao;
 	
-	@RequestMapping("mongovalidate")
+	@RequestMapping(value = "mongovalidate" , method = RequestMethod.POST)
 	public String mongovalidate(@RequestParam("username") String username,@RequestParam("password") String pwd,HttpSession httpSession,HttpServletRequest request){
 		if(username==null)
 			return "login";
@@ -42,15 +43,7 @@ public class LoginController {
 			return "login";
 	}
 	
-	
-	
-	
-	@RequestMapping("login")
-	public String login(){
-		return "login";
-	}
-	
-	@RequestMapping("logout")
+	@RequestMapping(value = "logout", method = RequestMethod.GET)
 	public String logout(HttpSession httpSession){
 		httpSession.removeAttribute("username");
 		httpSession.removeAttribute("uid");
