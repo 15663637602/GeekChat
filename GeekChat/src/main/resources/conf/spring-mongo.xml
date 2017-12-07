@@ -29,7 +29,7 @@
     </mongo:mongo>  
     <!-- database name -->
       <mongo:db-factory dbname="mongochat" mongo-ref="mongo"/>  
-      <!-- db template -->
+      <!-- mongodb template -->
      <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">  
         <constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>  
      </bean>  
