@@ -18,24 +18,20 @@ import akka.pattern.AskableActorSelection;
 import akka.util.Timeout;
 
 import message.FindOne;
-import message.FindOneResult;
+import message.GetOneResult;
 
 import scala.concurrent.Await;
 import scala.concurrent.Future;
 import service.UserDao;
 
-@Named("FindOneActor")
+@Named("GetOneActor")
 @Scope("prototype")
-public class FindOneActor extends UntypedActor{
+public class GetOneActor extends UntypedActor{
 	
 	@Autowired
 	UserDao userDao;
 	
-	private FindOne findone;
-	
-	public FindOneActor(FindOne findone){
-		this.findone = findone;
-		
+	public GetOneActor(Object msg){
 		ActorSelection selection = getContext().actorSelection("akka://default/user/Mongodb");
 		Timeout t = new Timeout(5, TimeUnit.SECONDS);
 		AskableActorSelection asker = new AskableActorSelection(selection);
@@ -44,21 +40,25 @@ public class FindOneActor extends UntypedActor{
 			ActorIdentity ident = (ActorIdentity) Await.result(fut, t.duration());
 			ActorRef ref = ident.getRef();
 			if (ref == null) System.out.println("No Mongodb");
-			ref.tell(findone, getSelf());
+			ref.tell(msg, getSelf());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
 	}
 	
+	
+	
 
 	@Override
 	public void onReceive(Object msg) throws Exception {
 		// TODO Auto-generated method stub
-		if (msg instanceof FindOneResult) {
-			FindOneResult findoneresule = (FindOneResult)msg;
-			userDao.returnUser(findoneresule.user);
+		if (msg instanceof GetOneResult) {
+			GetOneResult getoneresule = (GetOneResult)msg;
+			userDao.returnUser(getoneresule.user);
 			userDao.changestate(true);
+			
 			getSelf().tell(Kill.getInstance(), getSelf());
+		
 		}
 		else{
 			unhandled(msg);

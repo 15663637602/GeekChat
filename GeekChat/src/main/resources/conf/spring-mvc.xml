@@ -59,7 +59,7 @@
 <bean id="MongodbActor" class="akka.MongodbActor" scope="prototype">
 </bean>
 
-<bean id="FindOneActor" class="akka.FindOneActor" scope="prototype" >
+<bean id="GetOneActor" class="akka.GetOneActor" scope="prototype" >
 <constructor-arg value="null"/>
 </bean>  
 

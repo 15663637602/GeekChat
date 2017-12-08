@@ -40,7 +40,7 @@ public class ChatController {
 	
 	@RequestMapping(value="onlineusers",method = RequestMethod.GET)
 	@ResponseBody
-	public Set<String> onlineusers(HttpSession session){
+	public Set<String> onlineusers(HttpSession session) throws InterruptedException{
 		Map<Long, WebSocketSession> map=MyWebSocketHandler.userSocketSessionMap;
 		Set<Long> set=map.keySet();
 		Iterator<Long> it = set.iterator();

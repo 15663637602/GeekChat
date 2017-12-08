@@ -1,26 +1,16 @@
 package service.impl;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 
-import akka.FindOneActor;
-import akka.MongodbActor;
 import akka.SpringExt;
 import akka.actor.ActorSystem;
-import akka.actor.Props;
-
-import message.FindOne;
+import message.*;
 import po.User;
 import service.UserDao;
 
@@ -32,9 +22,9 @@ import service.UserDao;
 public class UserDaoImpl implements UserDao {  
 	public boolean get_result = false;
 	public User user_result= null;
-    
-    @Resource  
-    private MongoTemplate mongoTemplate;  
+
+//    @Resource  
+//    private MongoTemplate mongoTemplate;  
     
     @Autowired
     private ActorSystem actorsystem;
@@ -43,17 +33,27 @@ public class UserDaoImpl implements UserDao {
 	private SpringExt springExt;
   
     @Override  
-    public void insert(User object,String collectionName) {  
-        mongoTemplate.insert(object, collectionName);  
+    public void insert(User object,String collectionName) {
+    	get_result = false;
+    	
+    	actorsystem.actorOf(springExt.props("GetOneActor",new Insert(object,collectionName)),  (String) object.getUsername()); 
+    	try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return;
     }  
   
     @Override  
     public User findOne(Map<String,Object> params,String collectionName) {
     	get_result = false;
     	
-    	actorsystem.actorOf(springExt.props("FindOneActor",new FindOne(params,collectionName)),  (String) params.get("username")); 
+    	actorsystem.actorOf(springExt.props("GetOneActor",new FindOne(params,collectionName)), "finduser"+ (String) params.get("username")); 
+    	
     	try {
-			Thread.sleep(500);
+    		Thread.sleep(200);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -66,36 +66,46 @@ public class UserDaoImpl implements UserDao {
     		return null;
     	}
     }  
-  
+//  
+//    @Override  
+//    public List<User> findAll(Map<String,Object> params,String collectionName) {  
+//        List<User> result = mongoTemplate.find(new Query(Criteria.where("age").lt(params.get("maxAge"))), User.class,collectionName);  
+//        return result;  
+//    }  
+//  
+//    @Override  
+//    public void update(Map<String,Object> params,String collectionName) {  
+//        mongoTemplate.upsert(new Query(Criteria.where("id").is(params.get("id"))), new Update().set("name", params.get("name")), User.class,collectionName);  
+//    }  
+//  
+//    @Override  
+//    public void createCollection(String name) {  
+//        mongoTemplate.createCollection(name);  
+//    }  
+//  
+//  
+//    @Override  
+//    public void remove(Map<String, Object> params,String collectionName) {  
+//        mongoTemplate.remove(new Query(Criteria.where("id").is(params.get("id"))),User.class,collectionName);  
+//    }  
+//    
     @Override  
-    public List<User> findAll(Map<String,Object> params,String collectionName) {  
-        List<User> result = mongoTemplate.find(new Query(Criteria.where("age").lt(params.get("maxAge"))), User.class,collectionName);  
-        return result;  
-    }  
-  
-    @Override  
-    public void update(Map<String,Object> params,String collectionName) {  
-        mongoTemplate.upsert(new Query(Criteria.where("id").is(params.get("id"))), new Update().set("name", params.get("name")), User.class,collectionName);  
-    }  
-  
-    @Override  
-    public void createCollection(String name) {  
-        mongoTemplate.createCollection(name);  
-    }  
-  
-  
-    @Override  
-    public void remove(Map<String, Object> params,String collectionName) {  
-        mongoTemplate.remove(new Query(Criteria.where("id").is(params.get("id"))),User.class,collectionName);  
-    }  
-    
-    @Override  
-    public String getnamebyid(Long l){
+    public String getnamebyid(Long l) {
     	Map<String,Object> params=new HashMap<String,Object>();
 		String collectionName = "user";
 		params.put("u_id", l);
-		User user = mongoTemplate.findOne(new Query(Criteria.where("u_id").is(params.get("u_id"))), User.class,collectionName);
-		return user.getUsername();
+		get_result = false;
+		new Thread();
+    	actorsystem.actorOf(springExt.props("GetOneActor",new GetNamebyId(params,collectionName)),  "getnamebyid"+(String) params.get("u_id")); 
+    	try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	return null;
+    	
     }
 
 	@Override
@@ -104,8 +114,22 @@ public class UserDaoImpl implements UserDao {
 		Map<String,Object> params=new HashMap<String,Object>();
 		String collectionName = "user";
 		params.put("username", name);
-		User user = mongoTemplate.findOne(new Query(Criteria.where("username").is(params.get("username"))), User.class,collectionName);
-		return user.getU_id();
+		
+		get_result = false;
+    	
+    	actorsystem.actorOf(springExt.props("GetOneActor",new GetIdbyName(params,collectionName)), "getidbyname"+ (String) params.get("username")); 
+    	try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	if(get_result){
+    		return user_result.getU_id();
+    	}
+    	else{
+    		return null;
+    	}
 	}
 
 	@Override
@@ -126,13 +150,43 @@ public class UserDaoImpl implements UserDao {
 	 */
 	@Override
 	public User checkUsername(Map<String, Object> params, String collectionName) {
-		User user = mongoTemplate.findOne(new Query(Criteria.where("username").is(params.get("username"))), User.class,collectionName);
-		return user;
+		
+		get_result = false;
+    	
+    	actorsystem.actorOf(springExt.props("GetOneActor",new CheckUsername(params,collectionName)),  "checkusername"+(String) params.get("username")); 
+    	try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	if(get_result){
+    		return user_result;
+    	}
+    	else{
+    		return null;
+    	}
 	}
 
 	@Override
 	public User checkEmail(Map<String, Object> params, String collectionName) {
-		User user = mongoTemplate.findOne(new Query(Criteria.where("email").is(params.get("email"))), User.class,collectionName);
-		return user;
+		
+		get_result = false;
+    	
+    	actorsystem.actorOf(springExt.props("GetOneActor",new CheckEmail(params,collectionName)), "checkemail"+ (String) params.get("email")); 
+    	try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	if(get_result){
+    		return user_result;
+    	}
+    	else{
+    		return null;
+    	}
 	}
 }

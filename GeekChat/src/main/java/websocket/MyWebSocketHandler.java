@@ -45,6 +45,7 @@ public class MyWebSocketHandler implements WebSocketHandler {
 	public void afterConnectionEstablished(WebSocketSession session)
 			throws Exception {
 		Long uid = (Long) session.getAttributes().get("uid");
+		//System.out.println(uid);
 		String username=userDao.getnamebyid(uid);
 		System.out.println("afterconn: "+username);
 		if (userSocketSessionMap.get(uid) == null) {

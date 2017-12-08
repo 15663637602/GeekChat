@@ -2,10 +2,10 @@ package message;
 
 import po.User;
 
-public class FindOneResult {
+public class GetOneResult {
 	public User user;
 	
-	public FindOneResult(User user){
+	public GetOneResult(User user){
 		this.user = user;
 	}
 
