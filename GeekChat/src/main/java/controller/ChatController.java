@@ -62,14 +62,14 @@ public class ChatController {
 			System.out.println("broadcast");
 			Message msg = new Message();
 			msg.setDate(new Date());
-			msg.setFrom(-1L);//-1表示系统广播
-			msg.setFromName("系统广播");
+			msg.setFrom(-1L);//-1 indicates system broadcast
+			msg.setFromName("system broadcast");
 			msg.setTo(0L);
 			msg.setText(text);
 			handler.broadcast(new TextMessage(new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create().toJson(msg)));
 		}
 		
-	@RequestMapping("getuid")
+	@RequestMapping(value = "getuid", method = RequestMethod.POST)
 	@ResponseBody
 	public User getuid(@RequestParam("username")String username){
 		Long a = userDao.getidbyname(username);
