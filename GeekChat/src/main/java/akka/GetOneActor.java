@@ -32,10 +32,12 @@ public class GetOneActor extends UntypedActor{
 	UserDao userDao;
 	
 	public GetOneActor(Object msg){
+		System.out.println("Actor check 0");
 		ActorSelection selection = getContext().actorSelection("akka://default/user/Mongodb");
 		Timeout t = new Timeout(5, TimeUnit.SECONDS);
 		AskableActorSelection asker = new AskableActorSelection(selection);
 		Future<Object> fut = asker.ask(new Identify(1), t);
+		System.out.println("Actor check 1");
 		try {
 			ActorIdentity ident = (ActorIdentity) Await.result(fut, t.duration());
 			ActorRef ref = ident.getRef();
@@ -44,6 +46,7 @@ public class GetOneActor extends UntypedActor{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
+		System.out.println("Actor check 2");
 	}
 	
 	
