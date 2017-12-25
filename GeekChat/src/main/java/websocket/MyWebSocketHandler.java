@@ -51,6 +51,7 @@ public class MyWebSocketHandler implements WebSocketHandler {
 		String collectionName = "user";
 		params.put("uid", uid);
 		String username=userDao.getnamebyid(params, collectionName);
+		System.out.println("tetstte");
 		System.out.println("afterconn: "+username);
 		if (userSocketSessionMap.get(uid) == null) {
 			userSocketSessionMap.put(uid, session);

@@ -91,11 +91,8 @@ public class UserDaoImpl implements UserDao {
 //    
     @Override  
     public String getnamebyid(Map<String,Object> params,String collectionName) {
-    	System.out.println("check 0");
 		get_result = false;
-		System.out.println("check 1");
     	actorsystem.actorOf(springExt.props("GetOneActor",new GetNamebyId(params,collectionName)),  "getnamebyid"+(String) params.get("u_id")); 
-    	System.out.println("check 2");
 
     	try {
 			Thread.sleep(200);
@@ -103,9 +100,10 @@ public class UserDaoImpl implements UserDao {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	System.out.println("check 3");
     	
     	if(get_result){
+    		System.out.println(get_result);
+    		System.out.println(user_result);
     		return user_result.getUsername();
     	}
     	else{
