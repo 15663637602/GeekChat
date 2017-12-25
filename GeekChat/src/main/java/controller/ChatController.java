@@ -2,6 +2,7 @@ package controller;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -47,7 +48,10 @@ public class ChatController {
 		Set<String> nameset=new HashSet<String>();
 		while(it.hasNext()){
 			Long entry = it.next();
-			String name=userDao.getnamebyid(entry);
+			Map<String,Object> params=new HashMap<String,Object>();
+			String collectionName = "user";
+			params.put("uid", entry);
+			String name=userDao.getnamebyid(params, collectionName);
 			String user=(String)session.getAttribute("username");
 			if(!user.equals(name))
 				nameset.add(name);
@@ -72,7 +76,10 @@ public class ChatController {
 	@RequestMapping(value = "getuid", method = RequestMethod.POST)
 	@ResponseBody
 	public User getuid(@RequestParam("username")String username){
-		Long a = userDao.getidbyname(username);
+		Map<String,Object> params=new HashMap<String,Object>();
+		String collectionName = "user";
+		params.put("username", username);
+		Long a = userDao.getidbyname(params, collectionName);
 		User u=new User();
 		u.setU_id(a);
 		return u;

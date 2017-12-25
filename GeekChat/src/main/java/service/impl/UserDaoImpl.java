@@ -90,15 +90,13 @@ public class UserDaoImpl implements UserDao {
 //    }  
 //    
     @Override  
-    public String getnamebyid(Long l) {
+    public String getnamebyid(Map<String,Object> params,String collectionName) {
     	System.out.println("check 0");
-    	Map<String,Object> params=new HashMap<String,Object>();
-		String collectionName = "user";
-		params.put("u_id", l);
 		get_result = false;
 		System.out.println("check 1");
     	actorsystem.actorOf(springExt.props("GetOneActor",new GetNamebyId(params,collectionName)),  "getnamebyid"+(String) params.get("u_id")); 
     	System.out.println("check 2");
+
     	try {
 			Thread.sleep(200);
 		} catch (InterruptedException e) {
@@ -106,6 +104,7 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 		}
     	System.out.println("check 3");
+    	
     	if(get_result){
     		return user_result.getUsername();
     	}
@@ -116,11 +115,7 @@ public class UserDaoImpl implements UserDao {
     }
 
 	@Override
-	public Long getidbyname(String name) {
-		
-		Map<String,Object> params=new HashMap<String,Object>();
-		String collectionName = "user";
-		params.put("username", name);
+	public Long getidbyname(Map<String,Object> params,String collectionName) {
 		
 		get_result = false;
     	

@@ -2,6 +2,7 @@ package websocket;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -46,7 +47,10 @@ public class MyWebSocketHandler implements WebSocketHandler {
 			throws Exception {
 		Long uid = (Long) session.getAttributes().get("uid");
 		System.out.println("before: "+uid);
-		String username=userDao.getnamebyid(uid);
+		Map<String,Object> params=new HashMap<String,Object>();
+		String collectionName = "user";
+		params.put("uid", uid);
+		String username=userDao.getnamebyid(params, collectionName);
 		System.out.println("afterconn: "+username);
 		if (userSocketSessionMap.get(uid) == null) {
 			userSocketSessionMap.put(uid, session);
@@ -97,7 +101,10 @@ public class MyWebSocketHandler implements WebSocketHandler {
 			if (entry.getValue().getId().equals(session.getId())) {
 				userSocketSessionMap.remove(entry.getKey());
 				System.out.println("Remove the Socket session that currently throws the exception user: " + entry.getKey());
-				String username=userDao.getnamebyid(entry.getKey());
+				Map<String,Object> params=new HashMap<String,Object>();
+				String collectionName = "user";
+				params.put("uid", entry.getKey());
+				String username=userDao.getnamebyid(params, collectionName);
 				Message msg = new Message();
 				msg.setFrom(-2L);
 				msg.setText(username);
@@ -152,7 +159,10 @@ public class MyWebSocketHandler implements WebSocketHandler {
 			if (entry.getValue().getId().equals(session.getId())) {
 				userSocketSessionMap.remove(entry.getKey());
 				System.out.println("Remove the Socket session that currently throws the exception user: " + entry.getKey());
-				String username=userDao.getnamebyid(entry.getKey());
+				Map<String,Object> params=new HashMap<String,Object>();
+				String collectionName = "user";
+				params.put("uid", entry.getKey());
+				String username=userDao.getnamebyid(params, collectionName);
 				Message msg = new Message();
 				msg.setFrom(-2L);//Downline message, expressed in -2
 				msg.setText(username);

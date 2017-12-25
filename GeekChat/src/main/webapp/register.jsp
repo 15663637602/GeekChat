@@ -95,7 +95,8 @@ function check_pass(){
 	}
 	}
 	function cancel() {
-		if (name && password && mail) {
+	alert(name);
+		if (password && mail && (!name)) {
 			return true;
 		} else {
 			return false;
