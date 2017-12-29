@@ -50,7 +50,7 @@ public class ChatController {
 			Long entry = it.next();
 			Map<String,Object> params=new HashMap<String,Object>();
 			String collectionName = "user";
-			params.put("uid", entry);
+			params.put("u_id", entry);
 			String name=userDao.getnamebyid(params, collectionName);
 			String user=(String)session.getAttribute("username");
 			if(!user.equals(name))

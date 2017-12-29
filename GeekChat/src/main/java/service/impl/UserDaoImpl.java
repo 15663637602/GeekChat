@@ -36,7 +36,7 @@ public class UserDaoImpl implements UserDao {
     public void insert(User object,String collectionName) {
     	get_result = false;
     	
-    	actorsystem.actorOf(springExt.props("GetOneActor",new Insert(object,collectionName)),  (String) object.getUsername()); 
+    	actorsystem.actorOf(springExt.props("GetOneActor",new Insert(object,collectionName)),  object.getUsername()); 
     	try {
 			Thread.sleep(200);
 		} catch (InterruptedException e) {
@@ -50,7 +50,7 @@ public class UserDaoImpl implements UserDao {
     public User findOne(Map<String,Object> params,String collectionName) {
     	get_result = false;
     	
-    	actorsystem.actorOf(springExt.props("GetOneActor",new FindOne(params,collectionName)), "finduser"+ (String) params.get("username")); 
+    	actorsystem.actorOf(springExt.props("GetOneActor",new FindOne(params,collectionName)), "finduser"+ params.get("username")); 
     	
     	try {
     		Thread.sleep(200);
@@ -92,7 +92,7 @@ public class UserDaoImpl implements UserDao {
     @Override  
     public String getnamebyid(Map<String,Object> params,String collectionName) {
 		get_result = false;
-    	actorsystem.actorOf(springExt.props("GetOneActor",new GetNamebyId(params,collectionName)),  "getnamebyid"+(String) params.get("u_id")); 
+    	actorsystem.actorOf(springExt.props("GetOneActor",new GetNamebyId(params,collectionName)),  "getnamebyid"+params.get("u_id").toString()); 
 
     	try {
 			Thread.sleep(200);
@@ -117,7 +117,7 @@ public class UserDaoImpl implements UserDao {
 		
 		get_result = false;
     	
-    	actorsystem.actorOf(springExt.props("GetOneActor",new GetIdbyName(params,collectionName)), "getidbyname"+ (String) params.get("username")); 
+    	actorsystem.actorOf(springExt.props("GetOneActor",new GetIdbyName(params,collectionName)), "getidbyname"+ params.get("username")); 
     	try {
 			Thread.sleep(200);
 		} catch (InterruptedException e) {
@@ -153,7 +153,7 @@ public class UserDaoImpl implements UserDao {
 		
 		get_result = false;
     	
-    	actorsystem.actorOf(springExt.props("GetOneActor",new CheckUsername(params,collectionName)),  "checkusername"+(String) params.get("username")); 
+    	actorsystem.actorOf(springExt.props("GetOneActor",new CheckUsername(params,collectionName)),  "checkusername"+ params.get("username")); 
     	try {
 			Thread.sleep(200);
 		} catch (InterruptedException e) {
@@ -174,7 +174,7 @@ public class UserDaoImpl implements UserDao {
 		
 		get_result = false;
     	
-    	actorsystem.actorOf(springExt.props("GetOneActor",new CheckEmail(params,collectionName)), "checkemail"+ (String) params.get("email")); 
+    	actorsystem.actorOf(springExt.props("GetOneActor",new CheckEmail(params,collectionName)), "checkemail"+  params.get("email")); 
     	try {
 			Thread.sleep(200);
 		} catch (InterruptedException e) {

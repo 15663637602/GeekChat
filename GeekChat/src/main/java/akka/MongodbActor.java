@@ -33,7 +33,7 @@ public class MongodbActor extends UntypedActor{
 		}
 		else if(Msg instanceof GetNamebyId){
 			GetNamebyId getnamebyid = (GetNamebyId) Msg;
-			User user = mongoTemplate.findOne(new Query(Criteria.where("u_id").is(getnamebyid.params.get("uid"))), User.class,getnamebyid.collectionName);
+			User user = mongoTemplate.findOne(new Query(Criteria.where("u_id").is(getnamebyid.params.get("u_id"))), User.class,getnamebyid.collectionName);
 			getSender().tell(new GetOneResult(user), getSelf());
 		}
 		else if(Msg instanceof GetIdbyName){

@@ -49,7 +49,7 @@ public class MyWebSocketHandler implements WebSocketHandler {
 		System.out.println("before: "+uid);
 		Map<String,Object> params=new HashMap<String,Object>();
 		String collectionName = "user";
-		params.put("uid", uid);
+		params.put("u_id", uid);
 		String username=userDao.getnamebyid(params, collectionName);
 		System.out.println("tetstte");
 		System.out.println("afterconn: "+username);
@@ -104,7 +104,7 @@ public class MyWebSocketHandler implements WebSocketHandler {
 				System.out.println("Remove the Socket session that currently throws the exception user: " + entry.getKey());
 				Map<String,Object> params=new HashMap<String,Object>();
 				String collectionName = "user";
-				params.put("uid", entry.getKey());
+				params.put("u_id", entry.getKey());
 				String username=userDao.getnamebyid(params, collectionName);
 				Message msg = new Message();
 				msg.setFrom(-2L);
@@ -162,7 +162,7 @@ public class MyWebSocketHandler implements WebSocketHandler {
 				System.out.println("Remove the Socket session that currently throws the exception user: " + entry.getKey());
 				Map<String,Object> params=new HashMap<String,Object>();
 				String collectionName = "user";
-				params.put("uid", entry.getKey());
+				params.put("u_id", entry.getKey());
 				String username=userDao.getnamebyid(params, collectionName);
 				Message msg = new Message();
 				msg.setFrom(-2L);//Downline message, expressed in -2
