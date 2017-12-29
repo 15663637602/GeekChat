@@ -251,6 +251,11 @@
 			<artifactId>akka-multi-node-testkit_2.10</artifactId>
 			<version>${akka.version}</version>
 		</dependency>
+		<dependency>
+    <groupId>javax.inject</groupId>
+    <artifactId>javax.inject</artifactId>
+    <version>1</version>
+</dependency>
 	</dependencies>
 	<build>
 		<finalName>GeekChat</finalName>
