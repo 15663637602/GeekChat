@@ -12,10 +12,8 @@ import akka.actor.Props;
  * @author Yuqi Li
  * date: Dec 6, 2017 1:53:12 PM
  */
-public class Test {
+public class BuildActorSystem {
 	private String roles;
-
-
 	/**
 	 * Akka集群，底层netty启动监听host
 	 */

@@ -63,7 +63,7 @@
 <constructor-arg value="null"/>
 </bean>  
 
-<bean id="akkaSystem" class="akka.Test"
+<bean id="akkaSystem" class="akka.BuildActorSystem"
 		init-method="start" destroy-method="close">
 		<property name="port" value="7722"></property>
 		<property name="host" value="192.168.1.121"></property>
