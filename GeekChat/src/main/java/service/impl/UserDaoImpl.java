@@ -2,6 +2,7 @@ package service.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,7 @@ import service.UserDao;
  */
 @Repository("userDaoImpl")  
 public class UserDaoImpl implements UserDao {  
-	public boolean get_result = false;
-	public User user_result= null;
+	Map<String,User> results = new HashMap<String,User>();
 
 //    @Resource  
 //    private MongoTemplate mongoTemplate;  
@@ -34,9 +34,8 @@ public class UserDaoImpl implements UserDao {
   
     @Override  
     public void insert(User object,String collectionName) {
-    	get_result = false;
-    	
-    	actorsystem.actorOf(springExt.props("GetOneActor",new Insert(object,collectionName)),  object.getUsername()); 
+    	String message_uuid = UUID.randomUUID().toString();
+    	actorsystem.actorOf(springExt.props("GetOneActor",new Insert(object,collectionName,message_uuid)),  "insert"+object.getUsername()); 
     	try {
 			Thread.sleep(200);
 		} catch (InterruptedException e) {
@@ -48,9 +47,10 @@ public class UserDaoImpl implements UserDao {
   
     @Override  
     public User findOne(Map<String,Object> params,String collectionName) {
-    	get_result = false;
-    	
-    	actorsystem.actorOf(springExt.props("GetOneActor",new FindOne(params,collectionName)), "finduser"+ params.get("username")); 
+    
+    	String message_uuid = UUID.randomUUID().toString();
+    	results.put(message_uuid, null);
+    	actorsystem.actorOf(springExt.props("GetOneActor",new FindOne(params,collectionName,message_uuid)), "finduser"+ params.get("username")); 
     	
     	try {
     		Thread.sleep(200);
@@ -59,12 +59,14 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 		}
     	
-    	if(get_result){
-    		return user_result;
+    	User this_result = results.get(message_uuid);
+    	if(this_result!=null)
+    	{
+    		System.out.println("The get_result of Actor finduser"+params.get("username").toString()+" is not null");
+    		System.out.println("The username of user_result is"+this_result.getUsername());
     	}
-    	else{
-    		return null;
-    	}
+    	results.remove(message_uuid);
+    	return this_result;
     }  
 //  
 //    @Override  
@@ -91,8 +93,9 @@ public class UserDaoImpl implements UserDao {
 //    
     @Override  
     public String getnamebyid(Map<String,Object> params,String collectionName) {
-		get_result = false;
-    	actorsystem.actorOf(springExt.props("GetOneActor",new GetNamebyId(params,collectionName)),  "getnamebyid"+params.get("u_id").toString()); 
+    	String message_uuid = UUID.randomUUID().toString();
+    	results.put(message_uuid, null);
+    	actorsystem.actorOf(springExt.props("GetOneActor",new GetNamebyId(params,collectionName,message_uuid)),  "getnamebyid"+params.get("u_id").toString()); 
 
     	try {
 			Thread.sleep(200);
@@ -101,59 +104,56 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 		}
     	
-    	if(get_result){
-    		System.out.println(get_result);
-    		System.out.println(user_result);
-    		return user_result.getUsername();
+    	User this_result = results.get(message_uuid);
+    	if(this_result!=null)
+    	{
+    		System.out.println("The get_result of Actor getnamebyid"+params.get("u_id").toString()+" is not null");
+    		System.out.println("The username of user_result is"+this_result.getUsername());
     	}
-    	else{
-    		return null;
-    	}
+    	results.remove(message_uuid);
+    	return this_result.getUsername();
+    	
     	
     }
 
 	@Override
 	public Long getidbyname(Map<String,Object> params,String collectionName) {
-		
-		get_result = false;
+		String message_uuid = UUID.randomUUID().toString();
+    	results.put(message_uuid, null);
     	
-    	actorsystem.actorOf(springExt.props("GetOneActor",new GetIdbyName(params,collectionName)), "getidbyname"+ params.get("username")); 
+    	actorsystem.actorOf(springExt.props("GetOneActor",new GetIdbyName(params,collectionName,message_uuid)), "getidbyname"+ params.get("username")); 
     	try {
 			Thread.sleep(200);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	if(get_result){
-    		return user_result.getU_id();
+    	
+    	User this_result = results.get(message_uuid);
+    	if(this_result!=null)
+    	{
+    		System.out.println("The get_result of Actor getidbyname"+params.get("username").toString()+" is not null");
+    		System.out.println("The u_id of user_result is"+this_result.getU_id());
     	}
-    	else{
-    		return null;
-    	}
+    	results.remove(message_uuid);
+    	return this_result.getU_id();
 	}
-
+	
 	@Override
-	public void changestate(boolean get_result) {
-		// TODO Auto-generated method stub
-		this.get_result = get_result;
-		
+	public void returnresult(GetOneResult result){
+		results.put(result.msg_uuid,result.user);
 	}
 
-	@Override
-	public void returnUser(User user) {
-		// TODO Auto-generated method stub
-		this.user_result = user;
-	}
-
+	
 	/**
 	 * 07.12 Yuqi Li
 	 */
 	@Override
 	public User checkUsername(Map<String, Object> params, String collectionName) {
-		
-		get_result = false;
+		String message_uuid = UUID.randomUUID().toString();
+    	results.put(message_uuid, null);
     	
-    	actorsystem.actorOf(springExt.props("GetOneActor",new CheckUsername(params,collectionName)),  "checkusername"+ params.get("username")); 
+    	actorsystem.actorOf(springExt.props("GetOneActor",new CheckUsername(params,collectionName,message_uuid)),  "checkusername"+ params.get("username")); 
     	try {
 			Thread.sleep(200);
 		} catch (InterruptedException e) {
@@ -161,20 +161,17 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 		}
     	
-    	if(get_result){
-    		return user_result;
-    	}
-    	else{
-    		return null;
-    	}
+    	User this_result = results.get(message_uuid);
+    	results.remove(message_uuid);
+    	return this_result;
 	}
 
 	@Override
 	public User checkEmail(Map<String, Object> params, String collectionName) {
-		
-		get_result = false;
+		String message_uuid = UUID.randomUUID().toString();
+    	results.put(message_uuid, null);
     	
-    	actorsystem.actorOf(springExt.props("GetOneActor",new CheckEmail(params,collectionName)), "checkemail"+  params.get("email")); 
+    	actorsystem.actorOf(springExt.props("GetOneActor",new CheckEmail(params,collectionName,message_uuid)), "checkemail"+  params.get("email")); 
     	try {
 			Thread.sleep(200);
 		} catch (InterruptedException e) {
@@ -182,11 +179,8 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 		}
     	
-    	if(get_result){
-    		return user_result;
-    	}
-    	else{
-    		return null;
-    	}
+    	User this_result = results.get(message_uuid);
+    	results.remove(message_uuid);
+    	return this_result;
 	}
 }

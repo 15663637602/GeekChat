@@ -56,9 +56,8 @@ public class GetOneActor extends UntypedActor{
 	public void onReceive(Object msg) throws Exception {
 		// TODO Auto-generated method stub
 		if (msg instanceof GetOneResult) {
-			GetOneResult getoneresule = (GetOneResult)msg;
-			userDao.returnUser(getoneresule.user);
-			userDao.changestate(true);
+			GetOneResult getoneresult = (GetOneResult)msg;
+			userDao.returnresult(getoneresult);
 			
 			getSelf().tell(Kill.getInstance(), getSelf());
 		

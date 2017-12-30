@@ -3,6 +3,7 @@ package service;
 import java.util.List;
 import java.util.Map;
 
+import message.GetOneResult;
 import po.User;
 
 /**
@@ -23,7 +24,6 @@ public interface MongoBase<T> {
 //    public void remove(Map<String,Object> params,String collectionName);  
     //更改收到结果状态
 
-    public void changestate(boolean get_result);
-    public void returnUser(User user);
+    public void returnresult(GetOneResult result);
       
 }  
