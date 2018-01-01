@@ -56,12 +56,6 @@
 <bean id="actorSystem" class="akka.actor.ActorSystem" factory-method="create" destroy-method="shutdown" scope="singleton">
 </bean> 
 
-<bean id="MongodbActor" class="akka.MongodbActor" scope="prototype">
-</bean>
-
-<bean id="GetOneActor" class="akka.GetOneActor" scope="prototype" >
-<constructor-arg value="null"/>
-</bean>  
 
 <bean id="akkaSystem" class="akka.BuildActorSystem"
 		init-method="start" destroy-method="close">

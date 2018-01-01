@@ -62,12 +62,12 @@ public class ChatController {
 	// broadcast
 		@ResponseBody
 		@RequestMapping(value = "broadcast", method = RequestMethod.POST)
-		public void broadcast(@RequestParam("text") String text) throws IOException {
+		public void broadcast(@RequestParam("text") String text,@RequestParam("username") String username) throws IOException {
 			System.out.println("broadcast");
 			Message msg = new Message();
 			msg.setDate(new Date());
-			msg.setFrom(-1L);//-1 indicates system broadcast
-			msg.setFromName("system broadcast");
+			msg.setFrom(-1L);//-1 indicates public message
+			msg.setFromName(username);
 			msg.setTo(0L);
 			msg.setText(text);
 			handler.broadcast(new TextMessage(new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create().toJson(msg)));
@@ -76,6 +76,7 @@ public class ChatController {
 	@RequestMapping(value = "getuid", method = RequestMethod.POST)
 	@ResponseBody
 	public User getuid(@RequestParam("username")String username){
+		
 		Map<String,Object> params=new HashMap<String,Object>();
 		String collectionName = "user";
 		params.put("username", username);
